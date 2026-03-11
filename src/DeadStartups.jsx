@@ -2,28 +2,28 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { toPng } from 'html-to-image';
 
 const FAILED_STARTUPS = [
-  { name: "Quibi", slug: "quibi", year: "2018–2020", raised: "$1.75B", tagline: "Quick bites of premium video", category: "Entertainment", founder: "Jeffrey Katzenberg" },
-  { name: "Juicero", slug: "juicero", year: "2013–2017", raised: "$120M", tagline: "Press-based juice from proprietary packs", category: "Hardware/Food", founder: "Doug Evans" },
-  { name: "Theranos", slug: "theranos", year: "2003–2018", raised: "$700M", tagline: "Revolutionary blood testing", category: "HealthTech", founder: "Elizabeth Holmes" },
-  { name: "Vine", slug: "vine", year: "2012–2017", raised: "Acquired by Twitter", tagline: "6-second looping videos", category: "Social Media", founder: "Dom Hofmann" },
-  { name: "Google+", slug: "google-plus", year: "2011–2019", raised: "Internal Google", tagline: "Google's social network", category: "Social Media", founder: "Vic Gundotra" },
-  { name: "MoviePass", slug: "moviepass", year: "2011–2019", raised: "$68M", tagline: "Unlimited movies for $10/mo", category: "Entertainment", founder: "Stacy Spikes" },
-  { name: "Jawbone", slug: "jawbone", year: "1999–2017", raised: "$930M", tagline: "Wearable fitness trackers", category: "Hardware", founder: "Alexander Asseily" },
-  { name: "Pets.com", slug: "pets-com", year: "1998–2000", raised: "$110M", tagline: "Pet supplies delivered online", category: "E-commerce", founder: "Julie Wainwright" },
-  { name: "Wework (OG)", slug: "wework-og", year: "2010–2019 (IPO fail)", raised: "$12.8B", tagline: "Elevate the world's consciousness... with desks", category: "Real Estate", founder: "Adam Neumann" },
-  { name: "Clubhouse", slug: "clubhouse", year: "2020–2023", raised: "$110M", tagline: "Drop-in audio conversations", category: "Social Media", founder: "Paul Davison" },
-  { name: "Yik Yak", slug: "yik-yak", year: "2013–2017", raised: "$73.5M", tagline: "Anonymous local social feed", category: "Social Media", founder: "Tyler Droll" },
-  { name: "Rdio", slug: "rdio", year: "2010–2015", raised: "$125M", tagline: "Social music streaming", category: "Music", founder: "Janus Friis" },
-  { name: "Solyndra", slug: "solyndra", year: "2005–2011", raised: "$1.1B", tagline: "Solar panels for commercial rooftops", category: "CleanTech", founder: "Chris Gronet" },
-  { name: "Meerkat", slug: "meerkat", year: "2015–2016", raised: "$14M", tagline: "Live streaming from your phone", category: "Social Media", founder: "Ben Rubin" },
-  { name: "Beepi", slug: "beepi", year: "2013–2017", raised: "$150M", tagline: "Peer-to-peer car marketplace", category: "Marketplace", founder: "Ale Resnik" },
-  { name: "Essential Products", slug: "essential-products", year: "2015–2020", raised: "$330M", tagline: "Premium Android phones by Andy Rubin", category: "Hardware", founder: "Andy Rubin" },
-  { name: "Quirky", slug: "quirky", year: "2009–2015", raised: "$185M", tagline: "Crowdsourced product invention", category: "Hardware", founder: "Ben Kaufman" },
-  { name: "Color Labs", slug: "color-labs", year: "2011–2012", raised: "$41M", tagline: "Proximity-based photo sharing", category: "Social Media", founder: "Bill Nguyen" },
-  { name: "Secret", slug: "secret", year: "2013–2015", raised: "$35M", tagline: "Anonymous social sharing app", category: "Social Media", founder: "David Byttow" },
-  { name: "Homejoy", slug: "homejoy", year: "2012–2015", raised: "$40M", tagline: "On-demand home cleaning", category: "Services", founder: "Adora Cheung" },
-  { name: "Shyp", slug: "shyp", year: "2013–2018", raised: "$62M", tagline: "On-demand shipping made easy", category: "Logistics", founder: "Kevin Gibbon" },
-  { name: "Zirtual", slug: "zirtual", year: "2011–2015", raised: "$5.5M", tagline: "Virtual assistant marketplace", category: "Services", founder: "Maren Kate Donovan" },
+  { name: "Quibi", slug: "quibi", year: "2018–2020", raised: "$1.75B", tagline: "Quick bites of premium video", category: "Entertainment", founder: "Jeffrey Katzenberg", source: "https://en.wikipedia.org/wiki/Quibi" },
+  { name: "Juicero", slug: "juicero", year: "2013–2017", raised: "$120M", tagline: "Press-based juice from proprietary packs", category: "Hardware/Food", founder: "Doug Evans", source: "https://en.wikipedia.org/wiki/Juicero" },
+  { name: "Theranos", slug: "theranos", year: "2003–2018", raised: "$700M", tagline: "Revolutionary blood testing", category: "HealthTech", founder: "Elizabeth Holmes", source: "https://en.wikipedia.org/wiki/Theranos" },
+  { name: "Vine", slug: "vine", year: "2012–2017", raised: "Acquired by Twitter", tagline: "6-second looping videos", category: "Social Media", founder: "Dom Hofmann", source: "https://en.wikipedia.org/wiki/Vine_(service)" },
+  { name: "Google+", slug: "google-plus", year: "2011–2019", raised: "Internal Google", tagline: "Google's social network", category: "Social Media", founder: "Vic Gundotra", source: "https://en.wikipedia.org/wiki/Google%2B" },
+  { name: "MoviePass", slug: "moviepass", year: "2011–2019", raised: "$68M", tagline: "Unlimited movies for $10/mo", category: "Entertainment", founder: "Stacy Spikes", source: "https://en.wikipedia.org/wiki/MoviePass" },
+  { name: "Jawbone", slug: "jawbone", year: "1999–2017", raised: "$930M", tagline: "Wearable fitness trackers", category: "Hardware", founder: "Alexander Asseily", source: "https://en.wikipedia.org/wiki/Jawbone_(company)" },
+  { name: "Pets.com", slug: "pets-com", year: "1998–2000", raised: "$110M", tagline: "Pet supplies delivered online", category: "E-commerce", founder: "Julie Wainwright", source: "https://en.wikipedia.org/wiki/Pets.com" },
+  { name: "Wework (OG)", slug: "wework-og", year: "2010–2019 (IPO fail)", raised: "$12.8B", tagline: "Elevate the world's consciousness... with desks", category: "Real Estate", founder: "Adam Neumann", source: "https://en.wikipedia.org/wiki/WeWork" },
+  { name: "Clubhouse", slug: "clubhouse", year: "2020–2023", raised: "$110M", tagline: "Drop-in audio conversations", category: "Social Media", founder: "Paul Davison", source: "https://en.wikipedia.org/wiki/Clubhouse_(app)" },
+  { name: "Yik Yak", slug: "yik-yak", year: "2013–2017", raised: "$73.5M", tagline: "Anonymous local social feed", category: "Social Media", founder: "Tyler Droll", source: "https://en.wikipedia.org/wiki/Yik_Yak" },
+  { name: "Rdio", slug: "rdio", year: "2010–2015", raised: "$125M", tagline: "Social music streaming", category: "Music", founder: "Janus Friis", source: "https://en.wikipedia.org/wiki/Rdio" },
+  { name: "Solyndra", slug: "solyndra", year: "2005–2011", raised: "$1.1B", tagline: "Solar panels for commercial rooftops", category: "CleanTech", founder: "Chris Gronet", source: "https://en.wikipedia.org/wiki/Solyndra" },
+  { name: "Meerkat", slug: "meerkat", year: "2015–2016", raised: "$14M", tagline: "Live streaming from your phone", category: "Social Media", founder: "Ben Rubin", source: "https://en.wikipedia.org/wiki/Meerkat_(app)" },
+  { name: "Beepi", slug: "beepi", year: "2013–2017", raised: "$150M", tagline: "Peer-to-peer car marketplace", category: "Marketplace", founder: "Ale Resnik", source: "https://en.wikipedia.org/wiki/Beepi" },
+  { name: "Essential Products", slug: "essential-products", year: "2015–2020", raised: "$330M", tagline: "Premium Android phones by Andy Rubin", category: "Hardware", founder: "Andy Rubin", source: "https://en.wikipedia.org/wiki/Essential_Products" },
+  { name: "Quirky", slug: "quirky", year: "2009–2015", raised: "$185M", tagline: "Crowdsourced product invention", category: "Hardware", founder: "Ben Kaufman", source: "https://en.wikipedia.org/wiki/Quirky_(company)" },
+  { name: "Color Labs", slug: "color-labs", year: "2011–2012", raised: "$41M", tagline: "Proximity-based photo sharing", category: "Social Media", founder: "Bill Nguyen", source: "https://en.wikipedia.org/wiki/Color_(social_network)" },
+  { name: "Secret", slug: "secret", year: "2013–2015", raised: "$35M", tagline: "Anonymous social sharing app", category: "Social Media", founder: "David Byttow", source: "https://en.wikipedia.org/wiki/Secret_(app)" },
+  { name: "Homejoy", slug: "homejoy", year: "2012–2015", raised: "$40M", tagline: "On-demand home cleaning", category: "Services", founder: "Adora Cheung", source: "https://en.wikipedia.org/wiki/Homejoy" },
+  { name: "Shyp", slug: "shyp", year: "2013–2018", raised: "$62M", tagline: "On-demand shipping made easy", category: "Logistics", founder: "Kevin Gibbon", source: "https://en.wikipedia.org/wiki/Shyp" },
+  { name: "Zirtual", slug: "zirtual", year: "2011–2015", raised: "$5.5M", tagline: "Virtual assistant marketplace", category: "Services", founder: "Maren Kate Donovan", source: "https://en.wikipedia.org/wiki/Zirtual" },
 ];
 
 const ALL_CATEGORIES = ["All", ...Array.from(new Set(FAILED_STARTUPS.map(s => s.category)))];
@@ -100,8 +100,8 @@ function incrementRoastCount() {
 
 function getSlugFromHash() {
   const hash = window.location.hash;
-  const match = hash.match(/^#\/roast\/(.+)$/);
-  return match ? match[1] : null;
+  const match = hash.match(/^#\/(roast|resurrect)\/(.+)$/);
+  return match ? { view: match[1], slug: match[2] } : null;
 }
 
 export default function DeadStartups() {
@@ -118,6 +118,7 @@ export default function DeadStartups() {
   const [buildPrompt, setBuildPrompt] = useState(null);
   const [buildPromptLoading, setBuildPromptLoading] = useState(false);
   const [showBuildPrompt, setShowBuildPrompt] = useState(false);
+  const [view, setView] = useState("roast"); // "roast" or "resurrect"
   const cardRef = useRef(null);
   const hasAutoRoasted = useRef(false);
 
@@ -130,7 +131,48 @@ export default function DeadStartups() {
     setBuildPrompt(null);
     setBuildPromptLoading(true);
     setShowBuildPrompt(false);
+    setView("roast");
     window.location.hash = `/roast/${startup.slug}`;
+
+    // Check cache first
+    const cacheKey = `deadstartups_roast_${startup.slug}`;
+    const promptCacheKey = `deadstartups_prompt_${startup.slug}`;
+    try {
+      const cached = localStorage.getItem(cacheKey);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        setRoastResult(parsed);
+        setLoading(false);
+        setTimeout(() => setShowCard(true), 100);
+
+        // Check cached build prompt too
+        const cachedPrompt = localStorage.getItem(promptCacheKey);
+        if (cachedPrompt) {
+          setBuildPrompt(cachedPrompt);
+          setBuildPromptLoading(false);
+        } else {
+          // Fire async build prompt call
+          fetch("/api/build-prompt", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              startup,
+              rebuild_name: parsed.rebuild_name,
+              rebuild_pitch: parsed.rebuild_pitch,
+              rebuild_stack: parsed.rebuild_stack,
+            })
+          })
+            .then(r => r.json())
+            .then(data => {
+              setBuildPrompt(data.rebuild_prompt);
+              setBuildPromptLoading(false);
+              try { localStorage.setItem(promptCacheKey, data.rebuild_prompt); } catch {}
+            })
+            .catch(() => setBuildPromptLoading(false));
+        }
+        return;
+      }
+    } catch {}
 
     try {
       const response = await fetch("/api/roast", {
@@ -142,6 +184,9 @@ export default function DeadStartups() {
       setRoastResult(parsed);
       incrementRoastCount();
       setTimeout(() => setShowCard(true), 100);
+
+      // Cache the roast
+      try { localStorage.setItem(cacheKey, JSON.stringify(parsed)); } catch {}
 
       // Fire async build prompt call with roast context
       fetch("/api/build-prompt", {
@@ -158,6 +203,7 @@ export default function DeadStartups() {
         .then(data => {
           setBuildPrompt(data.rebuild_prompt);
           setBuildPromptLoading(false);
+          try { localStorage.setItem(promptCacheKey, data.rebuild_prompt); } catch {}
         })
         .catch(() => setBuildPromptLoading(false));
     } catch (err) {
@@ -191,18 +237,23 @@ export default function DeadStartups() {
     setBuildPrompt(null);
     setBuildPromptLoading(false);
     setShowBuildPrompt(false);
+    setView("roast");
     window.location.hash = "";
   }, []);
 
   // Handle hash-based routing on mount
   useEffect(() => {
     if (hasAutoRoasted.current) return;
-    const slug = getSlugFromHash();
-    if (slug) {
-      const startup = FAILED_STARTUPS.find(s => s.slug === slug);
+    const parsed = getSlugFromHash();
+    if (parsed) {
+      const startup = FAILED_STARTUPS.find(s => s.slug === parsed.slug);
       if (startup) {
         hasAutoRoasted.current = true;
         roastStartup(startup);
+        if (parsed.view === "resurrect") {
+          // Will switch to resurrect view after roast loads
+          setTimeout(() => setView("resurrect"), 100);
+        }
       }
     }
   }, [roastStartup]);
@@ -210,17 +261,19 @@ export default function DeadStartups() {
   // Listen for hashchange (browser back/forward)
   useEffect(() => {
     function onHashChange() {
-      const slug = getSlugFromHash();
-      if (!slug) {
+      const parsed = getSlugFromHash();
+      if (!parsed) {
         setSelectedStartup(null);
         setRoastResult(null);
         setShowCard(false);
         setPromptCopied(false);
+        setView("roast");
       } else {
-        const startup = FAILED_STARTUPS.find(s => s.slug === slug);
+        const startup = FAILED_STARTUPS.find(s => s.slug === parsed.slug);
         if (startup && (!selectedStartup || startup.slug !== selectedStartup.slug)) {
           roastStartup(startup);
         }
+        setView(parsed.view === "resurrect" ? "resurrect" : "roast");
       }
     }
     window.addEventListener("hashchange", onHashChange);
@@ -316,7 +369,7 @@ export default function DeadStartups() {
     borderRadius: 8,
     cursor: "pointer",
     fontFamily: "'Courier New', monospace",
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: 700,
     letterSpacing: 1,
     textTransform: "uppercase",
@@ -335,7 +388,7 @@ export default function DeadStartups() {
     border: "1px solid rgba(255,255,255,0.1)",
     borderRadius: 6,
     color: "#e8e4df",
-    fontSize: 14,
+    fontSize: 16,
     fontFamily: "'Courier New', monospace",
     outline: "none",
     transition: "border-color 0.2s",
@@ -375,7 +428,7 @@ export default function DeadStartups() {
           </h1>
 
           <p style={{
-            fontSize: 15, color: "#9ca3af", letterSpacing: 0.5, margin: 0,
+            fontSize: 16, color: "#9ca3af", letterSpacing: 0.5, margin: 0,
             fontStyle: "italic",
           }}>
             Where failed startups get roasted — then resurrected with AI
@@ -402,7 +455,7 @@ export default function DeadStartups() {
                   border: "none",
                   borderRadius: 10,
                   color: "#fff",
-                  fontSize: 15,
+                  fontSize: 14,
                   fontWeight: 900,
                   letterSpacing: 2,
                   textTransform: "uppercase",
@@ -438,7 +491,7 @@ export default function DeadStartups() {
                 style={{
                   width: "100%", padding: "14px 20px", boxSizing: "border-box",
                   background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)",
-                  borderRadius: 6, color: "#e8e4df", fontSize: 15,
+                  borderRadius: 6, color: "#e8e4df", fontSize: 16,
                   fontFamily: "'Courier New', monospace",
                   outline: "none", transition: "border-color 0.2s",
                 }}
@@ -463,7 +516,7 @@ export default function DeadStartups() {
                     borderRadius: 20,
                     cursor: "pointer",
                     fontFamily: "'Courier New', monospace",
-                    fontSize: 11,
+                    fontSize: 14,
                     fontWeight: 600,
                     letterSpacing: 0.5,
                     transition: "all 0.2s",
@@ -521,7 +574,7 @@ export default function DeadStartups() {
                   <div style={{
                     position: "absolute", top: 0, right: 0,
                     background: "rgba(239,68,68,0.15)", padding: "3px 10px",
-                    borderBottomLeftRadius: 6, fontSize: 10, color: "#ef4444",
+                    borderBottomLeftRadius: 6, fontSize: 13, color: "#ef4444",
                     letterSpacing: 1,
                   }}>
                     RIP
@@ -529,11 +582,11 @@ export default function DeadStartups() {
                   <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 4, letterSpacing: -0.5, fontFamily: "'Courier New', monospace" }}>
                     {startup.name}
                   </div>
-                  <div style={{ fontSize: 12, color: "#9ca3af", marginBottom: 6, letterSpacing: 0.3 }}>
+                  <div style={{ fontSize: 14, color: "#9ca3af", marginBottom: 6, letterSpacing: 0.3 }}>
                     {startup.year}
                   </div>
                   <div style={{
-                    fontSize: 11, color: "#ef4444", fontWeight: 600,
+                    fontSize: 14, color: "#ef4444", fontWeight: 600,
                     letterSpacing: 0.5, marginBottom: 8,
                   }}>
                     {startup.raised}
@@ -544,7 +597,7 @@ export default function DeadStartups() {
                     border: "1px solid rgba(255,255,255,0.08)",
                     padding: "2px 8px",
                     borderRadius: 10,
-                    fontSize: 10,
+                    fontSize: 13,
                     color: "#6b7280",
                     letterSpacing: 0.3,
                     fontWeight: 600,
@@ -555,16 +608,24 @@ export default function DeadStartups() {
               ))}
             </div>
 
+            {/* Data source note */}
+            <div style={{
+              marginTop: 20, fontSize: 13, color: "#525252",
+              fontStyle: "italic", textAlign: "center",
+            }}>
+              Startup data sourced from Wikipedia and public postmortem reports. Roasts are AI-generated satire.
+            </div>
+
             {/* Suggest a Startup Section */}
             <div style={{
-              marginTop: 48,
+              marginTop: 32,
               padding: 24,
               background: "rgba(255,255,255,0.02)",
               border: "1px solid rgba(255,255,255,0.08)",
               borderRadius: 12,
             }}>
               <div style={{
-                fontSize: 10, letterSpacing: 3, color: "#ef4444",
+                fontSize: 13, letterSpacing: 3, color: "#ef4444",
                 textTransform: "uppercase", marginBottom: 16,
                 display: "flex", alignItems: "center", gap: 8,
               }}>
@@ -580,7 +641,7 @@ export default function DeadStartups() {
                   fontWeight: 700,
                   letterSpacing: 1,
                 }}>
-                  {"\u2705"} Thanks! We'll add it to the graveyard soon.
+                  {"\u2705"} Noted! Your suggestion has been saved. We'll review it and add worthy failures to the graveyard.
                   <div style={{ marginTop: 12 }}>
                     <button
                       onClick={() => setSuggestSubmitted(false)}
@@ -592,7 +653,7 @@ export default function DeadStartups() {
                         borderRadius: 4,
                         cursor: "pointer",
                         fontFamily: "'Courier New', monospace",
-                        fontSize: 12,
+                        fontSize: 14,
                         letterSpacing: 1,
                       }}
                     >
@@ -622,7 +683,7 @@ export default function DeadStartups() {
                       borderRadius: 6,
                       cursor: "pointer",
                       fontFamily: "'Courier New', monospace",
-                      fontSize: 13,
+                      fontSize: 14,
                       fontWeight: 700,
                       letterSpacing: 1,
                       textTransform: "uppercase",
@@ -642,18 +703,25 @@ export default function DeadStartups() {
           <div>
             {/* Back button */}
             <button
-              onClick={reset}
+              onClick={() => {
+                if (view === "resurrect") {
+                  setView("roast");
+                  window.location.hash = `/roast/${selectedStartup.slug}`;
+                } else {
+                  reset();
+                }
+              }}
               style={{
                 background: "none", border: "1px solid rgba(255,255,255,0.1)",
                 color: "#9ca3af", padding: "8px 16px", borderRadius: 4,
                 cursor: "pointer", fontFamily: "'Courier New', monospace",
-                fontSize: 13, marginBottom: 24, letterSpacing: 0.5,
+                fontSize: 14, marginBottom: 24, letterSpacing: 0.5,
                 transition: "all 0.2s",
               }}
               onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#ef4444"; e.currentTarget.style.color = "#ef4444"; }}
               onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)"; e.currentTarget.style.color = "#9ca3af"; }}
             >
-              ← BACK TO GRAVEYARD
+              {view === "resurrect" ? "← BACK TO ROAST" : "← BACK TO GRAVEYARD"}
             </button>
 
             {/* Loading state */}
@@ -666,7 +734,7 @@ export default function DeadStartups() {
                   <SKULL />
                 </div>
                 <div style={{
-                  marginTop: 24, fontSize: 15, color: "#9ca3af",
+                  marginTop: 24, fontSize: 16, color: "#9ca3af",
                   letterSpacing: 2, textTransform: "uppercase",
                 }}>
                   Performing autopsy on {selectedStartup.name}...
@@ -694,8 +762,8 @@ export default function DeadStartups() {
                   transition: "all 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
                 }}
               >
-                {/* Compact roast card for image capture */}
-                <div id="roast-card" style={{ background: "#0a0a0a", borderRadius: 12, overflow: "hidden" }}>
+                {/* Compact roast card for image capture - hidden on resurrect view */}
+                <div id="roast-card" style={{ background: "#0a0a0a", borderRadius: 12, overflow: "hidden", display: view === "resurrect" ? "none" : "block" }}>
                   {/* Death certificate header */}
                   <div style={{
                     background: "linear-gradient(135deg, rgba(239,68,68,0.12), rgba(249,115,22,0.08))",
@@ -709,7 +777,7 @@ export default function DeadStartups() {
                     }}>
                       <div>
                         <div style={{
-                          fontSize: 11, letterSpacing: 2, color: "#ef4444",
+                          fontSize: 13, letterSpacing: 2, color: "#ef4444",
                           textTransform: "uppercase", marginBottom: 6,
                           fontFamily: "'Courier New', monospace", fontWeight: 600,
                         }}>
@@ -722,13 +790,34 @@ export default function DeadStartups() {
                           {selectedStartup.name}
                         </h2>
                         <div style={{
-                          fontSize: 14, color: "#9ca3af", marginTop: 6,
+                          fontSize: 16, color: "#9ca3af", marginTop: 6,
                         }}>
                           {selectedStartup.tagline}
                         </div>
+                        {selectedStartup.source && (
+                          <a
+                            href={selectedStartup.source}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              fontSize: 14, color: "#60a5fa", marginTop: 10,
+                              display: "inline-flex", alignItems: "center", gap: 6,
+                              textDecoration: "none", transition: "all 0.2s",
+                              fontFamily: "'Courier New', monospace",
+                              fontWeight: 600, letterSpacing: 0.5,
+                              background: "rgba(96,165,250,0.08)",
+                              padding: "6px 14px", borderRadius: 6,
+                              border: "1px solid rgba(96,165,250,0.2)",
+                            }}
+                            onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(96,165,250,0.15)"; e.currentTarget.style.borderColor = "rgba(96,165,250,0.4)"; }}
+                            onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(96,165,250,0.08)"; e.currentTarget.style.borderColor = "rgba(96,165,250,0.2)"; }}
+                          >
+                            Read the full story {"->"}
+                          </a>
+                        )}
                       </div>
                       <div style={{ textAlign: "right" }}>
-                        <div style={{ fontSize: 13, color: "#6b7280", letterSpacing: 0.5 }}>
+                        <div style={{ fontSize: 14, color: "#6b7280", letterSpacing: 0.5 }}>
                           {selectedStartup.year}
                         </div>
                         <div style={{
@@ -737,7 +826,7 @@ export default function DeadStartups() {
                         }}>
                           {selectedStartup.raised}
                         </div>
-                        <div style={{ fontSize: 10, color: "#6b7280", marginTop: 2, letterSpacing: 1, fontFamily: "'Courier New', monospace" }}>
+                        <div style={{ fontSize: 12, color: "#6b7280", marginTop: 2, letterSpacing: 1, fontFamily: "'Courier New', monospace" }}>
                           RAISED & BURNED
                         </div>
                       </div>
@@ -758,13 +847,13 @@ export default function DeadStartups() {
                       borderLeft: "3px solid #ef4444",
                     }}>
                       <div style={{
-                        fontSize: 11, letterSpacing: 1.5, color: "#ef4444",
+                        fontSize: 13, letterSpacing: 1.5, color: "#ef4444",
                         textTransform: "uppercase", marginBottom: 6,
                         fontFamily: "'Courier New', monospace", fontWeight: 600,
                       }}>
                         Cause of Death
                       </div>
-                      <div style={{ fontSize: 17, fontWeight: 700, lineHeight: 1.4 }}>
+                      <div style={{ fontSize: 19, fontWeight: 700, lineHeight: 1.4 }}>
                         {roastResult.cause_of_death}
                       </div>
                     </div>
@@ -772,7 +861,7 @@ export default function DeadStartups() {
                     {/* The roast */}
                     <div style={{ marginBottom: 20 }}>
                       <div style={{
-                        fontSize: 11, letterSpacing: 1.5, color: "#9ca3af",
+                        fontSize: 13, letterSpacing: 1.5, color: "#9ca3af",
                         textTransform: "uppercase", marginBottom: 10,
                         display: "flex", alignItems: "center", gap: 6,
                         fontFamily: "'Courier New', monospace", fontWeight: 600,
@@ -780,7 +869,7 @@ export default function DeadStartups() {
                         <SKULL /> The Roast
                       </div>
                       <p style={{
-                        fontSize: 16, lineHeight: 1.75, margin: 0, color: "#ebebeb",
+                        fontSize: 17, lineHeight: 1.75, margin: 0, color: "#ebebeb",
                         fontStyle: "italic",
                       }}>
                         "{roastResult.roast}"
@@ -798,7 +887,7 @@ export default function DeadStartups() {
                         gap: 6,
                       }}>
                         <div style={{
-                          fontSize: 11, letterSpacing: 1.5, color: "#9ca3af",
+                          fontSize: 13, letterSpacing: 1.5, color: "#9ca3af",
                           textTransform: "uppercase",
                           fontFamily: "'Courier New', monospace", fontWeight: 600,
                         }}>
@@ -809,11 +898,17 @@ export default function DeadStartups() {
                             {burnDots(roastResult.burn_rating)}
                           </div>
                           <div style={{
-                            fontSize: 12, color: "#ef4444", fontWeight: 700,
+                            fontSize: 14, color: "#ef4444", fontWeight: 700,
                             letterSpacing: 0.5, fontFamily: "'Courier New', monospace",
                           }}>
                             {ROAST_RATINGS[Math.min(roastResult.burn_rating - 1, 4)]}
                           </div>
+                        </div>
+                        <div style={{
+                          fontSize: 12, color: "#525252", marginTop: 4,
+                          fontStyle: "italic",
+                        }}>
+                          Based on money burned, hype vs reality, and how spectacularly they failed
                         </div>
                       </div>
 
@@ -828,7 +923,7 @@ export default function DeadStartups() {
                           fontSize: 22, color: "#525252", lineHeight: 1, marginBottom: 4,
                         }}>{"\u26B0\uFE0F"}</div>
                         <div style={{
-                          fontSize: 14, color: "#c4c4c4", fontStyle: "italic",
+                          fontSize: 16, color: "#c4c4c4", fontStyle: "italic",
                           lineHeight: 1.5,
                         }}>
                           "{roastResult.tombstone_quote}"
@@ -848,7 +943,7 @@ export default function DeadStartups() {
                     textAlign: "right",
                   }}>
                     <span style={{
-                      fontSize: 9, color: "#404040", letterSpacing: 1,
+                      fontSize: 12, color: "#404040", letterSpacing: 1,
                       fontWeight: 600,
                     }}>
                       DEADSTARTUPS.AI
@@ -856,167 +951,282 @@ export default function DeadStartups() {
                   </div>
                 </div>
 
-                {/* AI Resurrection Plan - always visible, outside the card */}
-                <div style={{
-                  marginTop: 16,
-                  background: "linear-gradient(135deg, rgba(34,197,94,0.06), rgba(16,185,129,0.03))",
-                  border: "1px solid rgba(34,197,94,0.15)",
-                  borderRadius: 12,
-                  padding: 24,
-                }}>
-                  {/* Section heading */}
-                  <div style={{
-                    display: "flex", alignItems: "center", gap: 8,
-                    fontSize: 10, letterSpacing: 3, textTransform: "uppercase", fontWeight: 700,
-                    color: "#22c55e", marginBottom: 20,
-                    fontFamily: "'Courier New', monospace",
-                  }}>
-                    <BOLT /> AI RESURRECTION PLAN
-                  </div>
-
-                  {/* Rebuild name + effort badge */}
-                  <div style={{
-                    display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap",
-                    marginBottom: 10,
-                  }}>
-                    <h3 style={{
-                      fontSize: 24, fontWeight: 800, margin: 0,
-                      color: "#22c55e", letterSpacing: -0.5,
-                      fontFamily: "'Courier New', monospace",
+                {/* Share buttons - always visible on roast page */}
+                {view === "roast" && (
+                  <div style={{ marginTop: 16, animation: "fadeSlideIn 0.3s ease-out" }}>
+                    {/* Share row */}
+                    <div style={{
+                      display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 12,
                     }}>
-                      {roastResult.rebuild_name}
-                    </h3>
-                    {roastResult.rebuild_effort && (
-                      <span style={{
-                        display: "inline-block",
-                        border: "1px solid rgba(34,197,94,0.4)",
-                        color: "#22c55e",
-                        padding: "3px 10px",
-                        borderRadius: 20,
-                        fontSize: 11,
-                        fontWeight: 600,
-                        letterSpacing: 0.5,
-                        fontFamily: "'Courier New', monospace",
-                      }}>
-                        {roastResult.rebuild_effort}
-                      </span>
-                    )}
-                  </div>
+                      <button
+                        onClick={handleShareTwitter}
+                        title="Share on Twitter"
+                        style={{
+                          ...shareButtonBase,
+                          flex: "1 1 0",
+                          padding: "12px 14px",
+                          color: "#1d9bf0",
+                          border: "1px solid rgba(29,155,240,0.3)",
+                          background: "rgba(29,155,240,0.08)",
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = "rgba(29,155,240,0.18)"}
+                        onMouseLeave={(e) => e.currentTarget.style.background = "rgba(29,155,240,0.08)"}
+                      >
+                        <TwitterIcon /> TWEET
+                      </button>
+                      <button
+                        onClick={handleShareLinkedIn}
+                        title="Share on LinkedIn"
+                        style={{
+                          ...shareButtonBase,
+                          flex: "1 1 0",
+                          padding: "12px 14px",
+                          color: "#0a66c2",
+                          border: "1px solid rgba(10,102,194,0.3)",
+                          background: "rgba(10,102,194,0.08)",
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = "rgba(10,102,194,0.18)"}
+                        onMouseLeave={(e) => e.currentTarget.style.background = "rgba(10,102,194,0.08)"}
+                      >
+                        <LinkedInIcon /> LINKEDIN
+                      </button>
+                      <button
+                        onClick={handleDownloadCard}
+                        title="Download roast card as PNG"
+                        style={{
+                          ...shareButtonBase,
+                          flex: "1 1 0",
+                          padding: "12px 14px",
+                          color: "#f97316",
+                          border: "1px solid rgba(249,115,22,0.3)",
+                          background: "rgba(249,115,22,0.08)",
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = "rgba(249,115,22,0.18)"}
+                        onMouseLeave={(e) => e.currentTarget.style.background = "rgba(249,115,22,0.08)"}
+                      >
+                        <DownloadIcon /> IMAGE
+                      </button>
+                      <button
+                        onClick={handleCopyToClipboard}
+                        title="Copy link"
+                        style={{
+                          ...shareButtonBase,
+                          flex: "1 1 0",
+                          padding: "12px 14px",
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.1)"}
+                        onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.05)"}
+                      >
+                        <CopyIcon /> {copyConfirm ? "COPIED!" : "LINK"}
+                      </button>
+                    </div>
 
-                  {/* Rebuild pitch */}
-                  <p style={{
-                    fontSize: 15, lineHeight: 1.75, color: "#ebebeb",
-                    margin: "0 0 24px 0",
-                  }}>
-                    {roastResult.rebuild_pitch}
-                  </p>
-
-                  {/* Build steps */}
-                  {roastResult.rebuild_steps && roastResult.rebuild_steps.length > 0 && (
-                    <div style={{ marginBottom: 24 }}>
-                      <div style={{
-                        fontSize: 10, letterSpacing: 2, color: "#9ca3af",
-                        textTransform: "uppercase", marginBottom: 12,
-                        fontFamily: "'Courier New', monospace", fontWeight: 600,
-                        display: "flex", alignItems: "center", gap: 8,
-                      }}>
-                        <span style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.08)" }} />
-                        BUILD STEPS
-                        <span style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.08)" }} />
-                      </div>
-                      {roastResult.rebuild_steps.map((step, i) => (
-                        <div key={i} style={{
-                          display: "flex", alignItems: "flex-start", gap: 10,
-                          marginBottom: i < roastResult.rebuild_steps.length - 1 ? 10 : 0,
-                        }}>
+                    {/* Bottom row: Roast Another + Resurrect It */}
+                    <div style={{ display: "flex", gap: 10 }}>
+                      <button
+                        onClick={reset}
+                        style={{
+                          flex: 1,
+                          background: "rgba(239,68,68,0.1)",
+                          border: "1px solid rgba(239,68,68,0.3)",
+                          color: "#ef4444", padding: "14px 16px",
+                          borderRadius: 8, cursor: "pointer",
+                          fontFamily: "'Courier New', monospace",
+                          fontSize: 14, fontWeight: 700,
+                          letterSpacing: 1.5, textTransform: "uppercase",
+                          transition: "all 0.2s",
+                          display: "flex", alignItems: "center",
+                          justifyContent: "center", gap: 6,
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = "rgba(239,68,68,0.2)"}
+                        onMouseLeave={(e) => e.currentTarget.style.background = "rgba(239,68,68,0.1)"}
+                      >
+                        <SKULL /> ROAST ANOTHER
+                      </button>
+                      <button
+                        onClick={() => {
+                          setView("resurrect");
+                          window.location.hash = `/resurrect/${selectedStartup.slug}`;
+                          window.scrollTo({ top: 0, behavior: "smooth" });
+                        }}
+                        style={{
+                          flex: 1,
+                          background: "linear-gradient(135deg, rgba(34,197,94,0.15), rgba(16,185,129,0.1))",
+                          border: "1px solid rgba(34,197,94,0.4)",
+                          color: "#22c55e", padding: "14px 16px",
+                          borderRadius: 8, cursor: "pointer",
+                          fontFamily: "'Courier New', monospace",
+                          fontSize: 14, fontWeight: 700,
+                          letterSpacing: 1.5, textTransform: "uppercase",
+                          transition: "all 0.2s",
+                          display: "flex", alignItems: "center",
+                          justifyContent: "center", gap: 8,
+                          position: "relative",
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = "linear-gradient(135deg, rgba(34,197,94,0.25), rgba(16,185,129,0.15))"}
+                        onMouseLeave={(e) => e.currentTarget.style.background = "linear-gradient(135deg, rgba(34,197,94,0.15), rgba(16,185,129,0.1))"}
+                      >
+                        {"🧬"} RESURRECT IT
+                        {buildPromptLoading && (
                           <span style={{
-                            color: "#22c55e", fontSize: 16, lineHeight: "22px", flexShrink: 0,
-                          }}>
-                            {String.fromCodePoint(0x2460 + i)}
-                          </span>
-                          <span style={{ color: "#ebebeb", fontSize: 15, lineHeight: "22px" }}>
-                            {step}
-                          </span>
-                        </div>
-                      ))}
+                            width: 8, height: 8, borderRadius: "50%",
+                            background: "#22c55e",
+                            animation: "pulse 1.5s ease-in-out infinite",
+                            marginLeft: 4,
+                          }} />
+                        )}
+                      </button>
                     </div>
-                  )}
+                  </div>
+                )}
 
-                  {/* Tech stack */}
-                  {roastResult.rebuild_stack && roastResult.rebuild_stack.length > 0 && (
-                    <div style={{ marginBottom: 24 }}>
+                {/* RESURRECT VIEW - separate page */}
+                {view === "resurrect" && (
+                  <div style={{ marginTop: 16, animation: "fadeSlideIn 0.4s ease-out" }}>
+                    {/* Resurrection plan */}
+                    <div style={{
+                      background: "linear-gradient(135deg, rgba(34,197,94,0.06), rgba(16,185,129,0.03))",
+                      border: "1px solid rgba(34,197,94,0.15)",
+                      borderRadius: 12,
+                      padding: 24,
+                    }}>
+                      {/* Section heading */}
                       <div style={{
-                        fontSize: 10, letterSpacing: 2, color: "#9ca3af",
-                        textTransform: "uppercase", marginBottom: 12,
-                        fontFamily: "'Courier New', monospace", fontWeight: 600,
                         display: "flex", alignItems: "center", gap: 8,
-                      }}>
-                        <span style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.08)" }} />
-                        TECH STACK
-                        <span style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.08)" }} />
-                      </div>
-                      <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                        {roastResult.rebuild_stack.map((tech, i) => (
-                          <span key={i} style={{
-                            background: "rgba(34,197,94,0.1)",
-                            border: "1px solid rgba(34,197,94,0.2)",
-                            padding: "5px 12px", borderRadius: 20,
-                            fontSize: 11, color: "#22c55e",
-                            letterSpacing: 0.5, fontWeight: 600,
-                          }}>
-                            {tech}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* View Build Prompt button */}
-                  <div style={{ marginTop: 4 }}>
-                    <button
-                      onClick={() => setShowBuildPrompt(!showBuildPrompt)}
-                      style={{
-                        width: "100%",
-                        background: showBuildPrompt ? "rgba(34,197,94,0.15)" : "rgba(34,197,94,0.08)",
-                        border: "2px dashed rgba(34,197,94,0.3)",
-                        borderRadius: 10,
-                        padding: "14px 20px",
-                        cursor: "pointer",
-                        display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
-                        transition: "all 0.2s",
-                      }}
-                      onMouseEnter={(e) => e.currentTarget.style.background = "rgba(34,197,94,0.15)"}
-                      onMouseLeave={(e) => e.currentTarget.style.background = showBuildPrompt ? "rgba(34,197,94,0.15)" : "rgba(34,197,94,0.08)"}
-                    >
-                      <span style={{
-                        fontSize: 13, letterSpacing: 2, color: "#22c55e",
-                        textTransform: "uppercase", fontWeight: 700,
+                        fontSize: 13, letterSpacing: 3, textTransform: "uppercase", fontWeight: 700,
+                        color: "#22c55e", marginBottom: 6,
                         fontFamily: "'Courier New', monospace",
                       }}>
-                        {buildPromptLoading ? (
-                          <>Generating Build Prompt<span style={{ animation: "pulse 1.5s infinite" }}> ...</span></>
-                        ) : showBuildPrompt ? (
-                          "Hide Build Prompt"
-                        ) : (
-                          <>{"🚀"} View Build Prompt</>
-                        )}
-                      </span>
-                    </button>
+                        <BOLT /> AI RESURRECTION PLAN
+                      </div>
+                      <div style={{
+                        fontSize: 14, color: "#525252", marginBottom: 20,
+                      }}>
+                        What {selectedStartup.name} could have been with AI
+                      </div>
 
-                    {/* Expanded build prompt panel */}
-                    {showBuildPrompt && (
+                      {/* Rebuild name + effort badge */}
+                      <div style={{
+                        display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap",
+                        marginBottom: 10,
+                      }}>
+                        <h3 style={{
+                          fontSize: 28, fontWeight: 800, margin: 0,
+                          color: "#22c55e", letterSpacing: -0.5,
+                          fontFamily: "'Courier New', monospace",
+                        }}>
+                          {roastResult.rebuild_name}
+                        </h3>
+                        {roastResult.rebuild_effort && (
+                          <span style={{
+                            display: "inline-block",
+                            border: "1px solid rgba(34,197,94,0.4)",
+                            color: "#22c55e",
+                            padding: "4px 12px",
+                            borderRadius: 20,
+                            fontSize: 14,
+                            fontWeight: 600,
+                            letterSpacing: 0.5,
+                            fontFamily: "'Courier New', monospace",
+                          }}>
+                            {roastResult.rebuild_effort}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Rebuild pitch */}
+                      <p style={{
+                        fontSize: 17, lineHeight: 1.75, color: "#ebebeb",
+                        margin: "0 0 28px 0",
+                      }}>
+                        {roastResult.rebuild_pitch}
+                      </p>
+
+                      {/* Build steps */}
+                      {roastResult.rebuild_steps && roastResult.rebuild_steps.length > 0 && (
+                        <div style={{ marginBottom: 28 }}>
+                          <div style={{
+                            fontSize: 13, letterSpacing: 2, color: "#9ca3af",
+                            textTransform: "uppercase", marginBottom: 14,
+                            fontFamily: "'Courier New', monospace", fontWeight: 600,
+                            display: "flex", alignItems: "center", gap: 8,
+                          }}>
+                            <span style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.08)" }} />
+                            BUILD STEPS
+                            <span style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.08)" }} />
+                          </div>
+                          {roastResult.rebuild_steps.map((step, i) => (
+                            <div key={i} style={{
+                              display: "flex", alignItems: "flex-start", gap: 10,
+                              marginBottom: i < roastResult.rebuild_steps.length - 1 ? 12 : 0,
+                            }}>
+                              <span style={{
+                                color: "#22c55e", fontSize: 16, lineHeight: "22px", flexShrink: 0,
+                              }}>
+                                {String.fromCodePoint(0x2460 + i)}
+                              </span>
+                              <span style={{ color: "#ebebeb", fontSize: 16, lineHeight: "22px" }}>
+                                {step}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Tech stack */}
+                      {roastResult.rebuild_stack && roastResult.rebuild_stack.length > 0 && (
+                        <div style={{ marginBottom: 28 }}>
+                          <div style={{
+                            fontSize: 13, letterSpacing: 2, color: "#9ca3af",
+                            textTransform: "uppercase", marginBottom: 14,
+                            fontFamily: "'Courier New', monospace", fontWeight: 600,
+                            display: "flex", alignItems: "center", gap: 8,
+                          }}>
+                            <span style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.08)" }} />
+                            TECH STACK
+                            <span style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.08)" }} />
+                          </div>
+                          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                            {roastResult.rebuild_stack.map((tech, i) => (
+                              <span key={i} style={{
+                                background: "rgba(34,197,94,0.1)",
+                                border: "1px solid rgba(34,197,94,0.2)",
+                                padding: "6px 14px", borderRadius: 20,
+                                fontSize: 14, color: "#22c55e",
+                                letterSpacing: 0.5, fontWeight: 600,
+                              }}>
+                                {tech}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Build Prompt section */}
                       <div style={{
                         background: "rgba(34,197,94,0.08)",
-                        borderLeft: "2px dashed rgba(34,197,94,0.3)",
-                        borderRight: "2px dashed rgba(34,197,94,0.3)",
-                        borderBottom: "2px dashed rgba(34,197,94,0.3)",
-                        borderRadius: "0 0 10px 10px",
+                        border: "2px dashed rgba(34,197,94,0.3)",
+                        borderRadius: 10,
                         padding: 20,
-                        marginTop: -2,
                       }}>
+                        <div style={{
+                          fontSize: 13, letterSpacing: 2, color: "#22c55e",
+                          textTransform: "uppercase", fontWeight: 700,
+                          marginBottom: 8,
+                          fontFamily: "'Courier New', monospace",
+                        }}>
+                          {"🚀"} BUILD THIS WITH AI
+                        </div>
+                        <p style={{
+                          fontSize: 14, lineHeight: 1.6, color: "#9ca3af",
+                          margin: "0 0 16px 0",
+                        }}>
+                          Paste this into Claude Code, Cursor, Bolt.new, or Lovable to scaffold the entire app.
+                        </p>
+
                         {buildPromptLoading ? (
                           <div style={{
-                            textAlign: "center", padding: "30px 0", color: "#9ca3af",
+                            textAlign: "center", padding: "24px 0", color: "#9ca3af",
                             fontFamily: "'Courier New', monospace", fontSize: 14,
                           }}>
                             <div style={{
@@ -1025,161 +1235,143 @@ export default function DeadStartups() {
                               animation: "spin 0.8s linear infinite",
                               margin: "0 auto 12px",
                             }} />
-                            AI is generating a comprehensive project brief...
+                            Generating comprehensive project brief...
                           </div>
                         ) : buildPrompt ? (
                           <>
-                            <p style={{
-                              fontSize: 14, lineHeight: 1.6, color: "#9ca3af",
-                              margin: "0 0 12px 0",
-                            }}>
-                              Paste this into Claude Code, Cursor, Bolt.new, or Lovable to scaffold the entire app.
-                            </p>
-
-                            <div style={{
-                              background: "#0a0a0a",
-                              border: "1px solid rgba(255,255,255,0.1)",
-                              borderRadius: 8,
-                              padding: 16,
-                              marginBottom: 16,
-                              maxHeight: 300,
-                              overflowY: "auto",
-                              fontFamily: "'Courier New', monospace",
-                              fontSize: 12,
-                              lineHeight: 1.6,
-                              color: "#9ca3af",
-                              whiteSpace: "pre-wrap",
-                              wordBreak: "break-word",
-                            }}>
-                              {buildPrompt}
-                            </div>
-
-                            <button
-                              onClick={() => {
-                                navigator.clipboard?.writeText(buildPrompt);
-                                setPromptCopied(true);
-                                setTimeout(() => setPromptCopied(false), 3000);
-                              }}
-                              style={{
-                                width: "100%",
-                                background: promptCopied ? "rgba(34,197,94,0.2)" : "#22c55e",
-                                border: promptCopied ? "1px solid #22c55e" : "none",
+                            {showBuildPrompt && (
+                              <div style={{
+                                background: "#0a0a0a",
+                                border: "1px solid rgba(255,255,255,0.1)",
                                 borderRadius: 8,
-                                padding: "14px 20px",
-                                cursor: "pointer",
-                                color: promptCopied ? "#22c55e" : "#0a0a0a",
-                                fontSize: 15,
-                                fontWeight: 700,
-                                letterSpacing: 1.5,
-                                textTransform: "uppercase",
+                                padding: 16,
+                                marginBottom: 16,
+                                maxHeight: 400,
+                                overflowY: "auto",
                                 fontFamily: "'Courier New', monospace",
-                                transition: "all 0.2s",
-                              }}
-                              onMouseEnter={(e) => {
-                                if (!promptCopied) e.currentTarget.style.background = "#16a34a";
-                              }}
-                              onMouseLeave={(e) => {
-                                if (!promptCopied) e.currentTarget.style.background = "#22c55e";
-                              }}
-                            >
-                              {promptCopied ? "\u2705 COPIED! Paste into Claude Code or Cursor" : "COPY BUILD PROMPT"}
-                            </button>
+                                fontSize: 13,
+                                lineHeight: 1.6,
+                                color: "#9ca3af",
+                                whiteSpace: "pre-wrap",
+                                wordBreak: "break-word",
+                              }}>
+                                {buildPrompt}
+                              </div>
+                            )}
+                            <div style={{ display: "flex", gap: 10 }}>
+                              <button
+                                onClick={() => setShowBuildPrompt(!showBuildPrompt)}
+                                style={{
+                                  flex: 1,
+                                  background: "rgba(255,255,255,0.05)",
+                                  border: "1px solid rgba(255,255,255,0.15)",
+                                  borderRadius: 8,
+                                  padding: "14px 20px",
+                                  cursor: "pointer",
+                                  color: "#d4d4d4",
+                                  fontSize: 14,
+                                  fontWeight: 700,
+                                  letterSpacing: 1,
+                                  textTransform: "uppercase",
+                                  fontFamily: "'Courier New', monospace",
+                                  transition: "all 0.2s",
+                                }}
+                                onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.1)"}
+                                onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.05)"}
+                              >
+                                {showBuildPrompt ? "HIDE PREVIEW" : "PREVIEW PROMPT"}
+                              </button>
+                              <button
+                                onClick={() => {
+                                  navigator.clipboard?.writeText(buildPrompt);
+                                  setPromptCopied(true);
+                                  setTimeout(() => setPromptCopied(false), 3000);
+                                }}
+                                style={{
+                                  flex: 1,
+                                  background: promptCopied ? "rgba(34,197,94,0.2)" : "#22c55e",
+                                  border: promptCopied ? "1px solid #22c55e" : "none",
+                                  borderRadius: 8,
+                                  padding: "14px 20px",
+                                  cursor: "pointer",
+                                  color: promptCopied ? "#22c55e" : "#0a0a0a",
+                                  fontSize: 14,
+                                  fontWeight: 700,
+                                  letterSpacing: 1,
+                                  textTransform: "uppercase",
+                                  fontFamily: "'Courier New', monospace",
+                                  transition: "all 0.2s",
+                                }}
+                                onMouseEnter={(e) => {
+                                  if (!promptCopied) e.currentTarget.style.background = "#16a34a";
+                                }}
+                                onMouseLeave={(e) => {
+                                  if (!promptCopied) e.currentTarget.style.background = "#22c55e";
+                                }}
+                              >
+                                {promptCopied ? "\u2705 COPIED!" : "COPY BUILD PROMPT"}
+                              </button>
+                            </div>
                           </>
                         ) : (
                           <div style={{
-                            textAlign: "center", padding: "20px 0", color: "#ef4444",
+                            textAlign: "center", padding: "16px 0", color: "#ef4444",
                             fontFamily: "'Courier New', monospace", fontSize: 14,
                           }}>
                             Failed to generate build prompt. Try roasting again.
                           </div>
                         )}
                       </div>
-                    )}
+                    </div>
+
+                    {/* Bottom nav on resurrect page */}
+                    <div style={{ display: "flex", gap: 10, marginTop: 16 }}>
+                      <button
+                        onClick={() => {
+                          setView("roast");
+                          window.location.hash = `/roast/${selectedStartup.slug}`;
+                        }}
+                        style={{
+                          flex: 1,
+                          background: "rgba(239,68,68,0.08)",
+                          border: "1px solid rgba(239,68,68,0.25)",
+                          color: "#ef4444", padding: "12px 16px",
+                          borderRadius: 8, cursor: "pointer",
+                          fontFamily: "'Courier New', monospace",
+                          fontSize: 14, fontWeight: 700,
+                          letterSpacing: 1, textTransform: "uppercase",
+                          transition: "all 0.2s",
+                          display: "flex", alignItems: "center",
+                          justifyContent: "center", gap: 6,
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = "rgba(239,68,68,0.15)"}
+                        onMouseLeave={(e) => e.currentTarget.style.background = "rgba(239,68,68,0.08)"}
+                      >
+                        {"<"} BACK TO ROAST
+                      </button>
+                      <button
+                        onClick={reset}
+                        style={{
+                          flex: 1,
+                          background: "rgba(255,255,255,0.03)",
+                          border: "1px solid rgba(255,255,255,0.1)",
+                          color: "#9ca3af", padding: "12px 16px",
+                          borderRadius: 8, cursor: "pointer",
+                          fontFamily: "'Courier New', monospace",
+                          fontSize: 14, fontWeight: 700,
+                          letterSpacing: 1, textTransform: "uppercase",
+                          transition: "all 0.2s",
+                          display: "flex", alignItems: "center",
+                          justifyContent: "center", gap: 6,
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.06)"}
+                        onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.03)"}
+                      >
+                        <SKULL /> ROAST ANOTHER
+                      </button>
+                    </div>
                   </div>
-                </div>
-
-                {/* Action buttons */}
-                <div style={{
-                  display: "flex", gap: 10, marginTop: 20, flexWrap: "wrap",
-                }}>
-                  <button
-                    onClick={reset}
-                    style={{
-                      flex: 1, minWidth: 120,
-                      background: "rgba(239,68,68,0.1)",
-                      border: "1px solid rgba(239,68,68,0.3)",
-                      color: "#ef4444", padding: "12px 16px",
-                      borderRadius: 8, cursor: "pointer",
-                      fontFamily: "'Courier New', monospace",
-                      fontSize: 12, fontWeight: 700,
-                      letterSpacing: 1, textTransform: "uppercase",
-                      transition: "all 0.2s",
-                      display: "flex", alignItems: "center",
-                      justifyContent: "center", gap: 6,
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = "rgba(239,68,68,0.2)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = "rgba(239,68,68,0.1)";
-                    }}
-                  >
-                    <SKULL /> ROAST ANOTHER
-                  </button>
-
-                  {/* Share buttons */}
-                  <button
-                    onClick={handleShareTwitter}
-                    title="Share on Twitter"
-                    style={{
-                      ...shareButtonBase,
-                      color: "#1d9bf0",
-                      border: "1px solid rgba(29,155,240,0.3)",
-                      background: "rgba(29,155,240,0.08)",
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.background = "rgba(29,155,240,0.18)"}
-                    onMouseLeave={(e) => e.currentTarget.style.background = "rgba(29,155,240,0.08)"}
-                  >
-                    <TwitterIcon /> TWEET
-                  </button>
-                  <button
-                    onClick={handleShareLinkedIn}
-                    title="Share on LinkedIn"
-                    style={{
-                      ...shareButtonBase,
-                      color: "#0a66c2",
-                      border: "1px solid rgba(10,102,194,0.3)",
-                      background: "rgba(10,102,194,0.08)",
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.background = "rgba(10,102,194,0.18)"}
-                    onMouseLeave={(e) => e.currentTarget.style.background = "rgba(10,102,194,0.08)"}
-                  >
-                    <LinkedInIcon /> LINKEDIN
-                  </button>
-                  <button
-                    onClick={handleCopyToClipboard}
-                    title="Copy to clipboard"
-                    style={shareButtonBase}
-                    onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.1)"}
-                    onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.05)"}
-                  >
-                    <CopyIcon /> {copyConfirm ? "COPIED!" : "COPY"}
-                  </button>
-                  <button
-                    onClick={handleDownloadCard}
-                    title="Download roast card as PNG"
-                    style={{
-                      ...shareButtonBase,
-                      color: "#22c55e",
-                      border: "1px solid rgba(34,197,94,0.3)",
-                      background: "rgba(34,197,94,0.08)",
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.background = "rgba(34,197,94,0.18)"}
-                    onMouseLeave={(e) => e.currentTarget.style.background = "rgba(34,197,94,0.08)"}
-                  >
-                    <DownloadIcon /> DOWNLOAD
-                  </button>
-                </div>
+                )}
               </div>
             )}
           </div>
@@ -1189,7 +1381,7 @@ export default function DeadStartups() {
         <footer style={{
           textAlign: "center", marginTop: 64, paddingTop: 24,
           borderTop: "1px solid rgba(255,255,255,0.05)",
-          fontSize: 11, color: "#404040", letterSpacing: 1,
+          fontSize: 13, color: "#404040", letterSpacing: 1,
         }}>
           DEADSTARTUPS.AI — HONORING THE FALLEN SINCE 2025
         </footer>
